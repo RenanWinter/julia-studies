@@ -1,0 +1,117 @@
+<h1 class="text-xl w-full text-center">Estamos estudando {{materia?.label || ' * Sei lá o que * '}}</h1>
+
+<ng-container *ngIf="answerType === ''">
+  <h1 class="mt-2 text-md w-full text-center">Quanto é?</h1>
+  <div class="text-xl flex justify-center items-center mt-8">
+    <span>{{number1}}</span>
+    <ng-container *ngIf="materia && materia.operator">
+      <span class="m-2">{{materia.operator}}</span>
+    </ng-container>
+    <span
+      [ngClass]="{'border-l border-b pl-2 pr-6 ml-2 border-primary': materia?.name === 'divisao'}">{{number2}}</span>
+  </div>
+  <div class="flex flex-col justify-center items-center mt-8">
+    <div>
+      <span>Resposta</span>
+      <input id="input" type="number" [(ngModel)]="resposta" (keydown.enter)="responder()"
+        class="border border-gray-400 rounded-md p-2 ml-2 w-32 text-center" />
+    </div>
+
+    <button class="mt-6 btn btn-sm btn-primary-content" (click)="responder()">Responder</button>
+
+  </div>
+
+  <div class="flex flex-col items-center bg-primary text-primary-content mt-8 border-2 p-2 border-primary rounded-md" *ngIf="materia.name === 'tabuada'">
+    <div class="mb-4 font-bold">Selecione as tabuadas</div>
+    <div class="flex justify-center gap-4">
+      <button class="btn btn-sm btn-primary" (click)="toggleTabuada(item)"
+        [ngClass]="{'btn-neutral': tabuadasSelecionadas.includes(item)}" *ngFor="let item of tabuadas">{{item}}</button>
+    </div>
+  </div>
+
+</ng-container>
+
+<div class="w-full h-full flex justify-center items-center mt-4">
+  <ng-container *ngIf="answerType === 'I'">
+    <div class="bg-red-500 text-white p-4 rounded-md text-center max-w-[600px]">
+      <div class="mb-4 text-lg">
+        <span>🔥🔥🔥</span>
+        <span class="mx-2">Resposta incorreta</span>
+        <span>🔥🔥🔥</span>
+
+      </div>
+
+      <div>Você levou {{resultTime}} para responder</div>
+      <div>A resposta correta era: {{correctResult}}</div>
+      <button class="btn btn-sm btn-error mt-4" (click)="restart()"> Vamos denovo!</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="answerType === 'C'">
+    <div class="bg-green-500 text-white p-4 rounded-md text-center">
+      <div class="mb-4 text-lg">
+        <span>🎉🎉🎉</span>
+        <span class="mx-2">Resposta correta! Parabéns!</span>
+        <span>🎉🎉🎉</span>
+
+      </div>
+      <div>Você levou {{resultTime}} para responder</div>
+      <button class="btn btn-sm btn-success mt-4" (click)="restart()"> Vamos denovo!</button>
+    </div>
+  </ng-container>
+
+</div>
+<div id="tsparticles"></div>
+
+<div *ngIf="showScoreboard || answerType !== ''" class="scoreboard bg-base-100 top-[80px] right-3 "
+  [ngClass]="{'absolute w-[500px]' : answerType === '', 'flex justify-center w-ful mt-4': answerType !== ''}">
+
+  <div class="flex flex-col p-2 rounded-lg shadow-lg">
+    <div class="font-bold border-b-1 border-b-2 border-primary mb-2">Suas estatísticas</div>
+    <table class="table table-xs my-2">
+      <thead>
+        <th>Resposta</th>
+        <th class="text-center">Qtd</th>
+        <th class="text-center">Tempo total</th>
+        <th class="text-center">Mais Lenta</th>
+        <th class="text-center">Mais Rápida</th>
+      </thead>
+      <tbody>
+        <tr class="text-success">
+          <td>Corretas</td>
+          <td class="text-center">{{scoreboard.corrects || '0'}}</td>
+          <td class="text-center">{{scoreboard.correctsTotalTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.slowestCorrectTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.fastestCorrectTime || '0'}}</td>
+        </tr>
+        <tr class="text-error">
+          <td>Incorretas</td>
+          <td class="text-center">{{scoreboard.incorrects || '0'}}</td>
+          <td class="text-center">{{scoreboard.incorrectsTotalTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.slowestIncorrectTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.fastestIncorrectTime || '0'}}</td>
+        </tr>
+        <tr class="font-bold">
+          <td>Total</td>
+          <td class="text-center">{{scoreboard.total || '0'}}</td>
+          <td class="text-center">{{scoreboard.playTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.slowestTime || '0'}}</td>
+          <td class="text-center">{{scoreboard.fastestTime || '0'}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <button *ngIf="answerType === ''"class="btn btn-sm btn-ghost btn-circle top-1 right-1 absolute" (click)="toggleScoreboard()">X</button>
+</div>
+
+<div *ngIf="!showScoreboard && answerType === ''" class="scoreboard absolute top-[80px] right-3">
+
+  <button class="btn btn-sm btn-ghost btn-circle top-1 right-1 absolute" (click)="toggleScoreboard()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart">
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+      <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+    </svg>
+  </button>
+</div>
