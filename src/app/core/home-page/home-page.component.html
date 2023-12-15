@@ -1,17 +1,16 @@
 <h1 class="text-2xl w-full text-center py-4">selecione o que você quer estudar</h1>
 
-<div *ngIf="!selected" class="rounded-box grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-  <div class="card w-96 bg-base-100 shadow-xl image-full">
-    <figure><img src="assets/math.webp" alt="Shoes" /></figure>
+<div class="rounded-box flex gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+  <div *ngFor="let categoria of categorias" class="card w-96 shadow-xl image-full" [class]="categoria.class || ''">
+    <figure><img [src]="'assets/' + categoria.image" alt="Shoes" /></figure>
     <div class="card-body">
-      <h2 class="card-title">Matemática!</h2>
-      <p>Matemática é uma ferramenta que ajuda a compreender o mundo!</p>
+      <h2 class="card-title">{{categoria.label}}</h2>
+      <p>{{categoria.description}}</p>
       <div class="card-actions justify-end">
-        <button class="btn btn-sm btn-primary" routerLink="matematica/divisao">Divisão</button>
-        <button class="btn btn-sm btn-Accent" routerLink="matematica/multiplicacao">Multiplicação</button>
-        <button class="btn btn-sm btn-warning" routerLink="matematica/tabuada">Tabuada</button>
+        <button *ngFor="let action of categoria.actions" class="btn btn-sm" [class]="action.class"
+          [routerLink]="action.router">{{action.label}}</button>
+
       </div>
     </div>
   </div>
-
 </div>

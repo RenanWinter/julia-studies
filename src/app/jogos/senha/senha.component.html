@@ -1,0 +1,62 @@
+<div *ngIf="!winner && !looser" class="flex flex-col justify-center items-center">
+  <div class="title">
+    <h1>Descubra a senha</h1>
+  </div>
+  <div class="flex flex-column gap-2">
+    <div *ngFor="let letter of currentOptions; let i = index">
+      <app-piece [letter]="letter" [color]="colors[i]" class="cursor-pointer" (click)="selectOption(letter)" />
+    </div>
+  </div>
+  <div class="flex flex-col gap-2 pt-4">
+    <div class="flex flex-row gap-2 pt-4">
+      <button class="btn btn-sm rounded-full bg-primary" (click)="checkGuess()">GO</button>
+      <div *ngFor="let guess of roundGuess; let i = index">
+        <app-piece [letter]="guess.letter" [color]="guess.color"></app-piece>
+      </div>
+    </div>
+
+    <div *ngFor="let round of rounds; let i = index" class="flex flex-col gap-2">
+      <div class="flex flex-row gap-2">
+        <div class="w-8 border border-gray-500 text-success flex justify-center items-center">
+          <div *ngIf="round.played">{{round.result.correct}}</div>
+        </div>
+        <div *ngFor="let guess of round.guess; let j = index">
+          <app-piece [letter]="guess.letter" [color]="guess.color"></app-piece>
+        </div>
+        <div class="w-8 border border-gray-500 text-error  flex justify-center items-center">
+          <div *ngIf="round.played">{{round.result.incorrect}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="winner || looser" class="w-full h-full flex justify-center items-center">
+  <div *ngIf="winner" class="bg-green-500 text-white p-4 rounded-md text-center w-2/4">
+    <div class="mb-4 text-lg">
+      <span>🎉🎉🎉</span>
+      <span class="mx-2">Você conseguiu!</span>
+      <span>🎉🎉🎉</span>
+
+    </div>
+    <div>A Senha era: {{password}}</div>
+    <button class="btn btn-sm btn-success mt-4" (click)="startGame()"> Vamos denovo!</button>
+  </div>
+
+  <div *ngIf="looser" class="bg-red-500 text-white p-4 rounded-md text-center">
+    <div class=" text-white p-4 rounded-md text-center max-w-[600px]">
+      <div class="mb-4 text-lg">
+        <span>🔥🔥🔥</span>
+        <span class="mx-2">Resposta incorreta</span>
+        <span>🔥🔥🔥</span>
+
+      </div>
+
+      <div>A Senha correta era: {{password}}</div>
+      <button class="btn btn-sm btn-success mt-4" (click)="startGame()"> Vamos denovo!</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="tsparticles"></div>
